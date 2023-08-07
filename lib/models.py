@@ -1,11 +1,13 @@
-from sqlalchemy import create_engine
-from sqlalchemy import ForeignKey, Column, Integer, String
+from sqlalchemy import ForeignKey, Column, Integer, String, MetaData
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('sqlite:///one_to_many.db')
+convention = {
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+}
+metadata = MetaData(naming_convention=convention)
 
-Base = declarative_base()
+Base = declarative_base(metadata=metadata)
 
 
 class Game(Base):
@@ -16,8 +18,8 @@ class Game(Base):
     genre = Column(String())
     platform = Column(String())
     price = Column(Integer())
-
-    reviews = relationship('Review', backref=backref('game'))
+    reviews = relationship('Review', backref=backref(
+        'game'), cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'Game(id={self.id}, ' + \
@@ -31,7 +33,6 @@ class Review(Base):
     id = Column(Integer(), primary_key=True)
     score = Column(Integer())
     comment = Column(String())
-
     game_id = Column(Integer(), ForeignKey('games.id'))
 
     def __repr__(self):
