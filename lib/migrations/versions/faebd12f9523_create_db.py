@@ -1,41 +1,24 @@
-from sqlalchemy import ForeignKey, Column, Integer, String, MetaData
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.declarative import declarative_base
+"""create db
 
-convention = {
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-}
-metadata = MetaData(naming_convention=convention)
+Revision ID: faebd12f9523
+Revises: 
+Create Date: 2023-03-15 13:20:05.247015
 
-Base = declarative_base(metadata=metadata)
-
-
-class Game(Base):
-    __tablename__ = 'games'
-
-    id = Column(Integer(), primary_key=True)
-    title = Column(String())
-    genre = Column(String())
-    platform = Column(String())
-    price = Column(Integer())
-    reviews = relationship('Review', backref=backref(
-        'game'), cascade='all, delete-orphan')
-
-    def __repr__(self):
-        return f'Game(id={self.id}, ' + \
-            f'title={self.title}, ' + \
-            f'platform={self.platform})'
+"""
+from alembic import op
+import sqlalchemy as sa
 
 
-class Review(Base):
-    __tablename__ = 'reviews'
+# revision identifiers, used by Alembic.
+revision = 'faebd12f9523'
+down_revision = None
+branch_labels = None
+depends_on = None
 
-    id = Column(Integer(), primary_key=True)
-    score = Column(Integer())
-    comment = Column(String())
-    game_id = Column(Integer(), ForeignKey('games.id'))
 
-    def __repr__(self):
-        return f'Review(id={self.id}, ' + \
-            f'score={self.score}, ' + \
-            f'game_id={self.game_id})'
+def upgrade() -> None:
+    pass
+
+
+def downgrade() -> None:
+    pass
